@@ -2,6 +2,7 @@ import argparse
 import torch
 
 from model.wide_res_net import WideResNet
+import model.vision_transformer as ViT
 from model.smooth_cross_entropy import smooth_crossentropy
 from data.cifar import Cifar
 from utility.log import Log
@@ -10,7 +11,6 @@ from utility.step_lr import StepLR
 from utility.bypass_bn import enable_running_stats, disable_running_stats
 
 import sys; sys.path.append("..")
-from sam import SAM
 from gsam import GSAM, LinearScheduler, CosineScheduler, ProportionScheduler
 
 
@@ -37,7 +37,8 @@ if __name__ == "__main__":
 
     dataset = Cifar(args.batch_size, args.threads)
     log = Log(log_each=10)
-    model = WideResNet(args.depth, args.width_factor, args.dropout, in_channels=3, labels=10).cuda()#to(device)
+    model = ViT.vit_base(num_classes=10, img_size=32).cuda()
+    # model = WideResNet(args.depth, args.width_factor, args.dropout, in_channels=3, labels=10).cuda()#to(device)
     #model = torch.nn.DataParallel(model)
 
     '''
